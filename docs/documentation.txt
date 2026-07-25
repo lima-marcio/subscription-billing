@@ -1,0 +1,28 @@
+Plataforma de Assinaturas (Subscription Billing)
+
+Sem usar Stripe inicialmente.
+
+Funcionalidades
+- Planos
+- Assinantes
+- Assinaturas
+- Renovação
+- Cancelamento
+- Trial
+- Upgrade
+- Downgrade
+
+Regras
+- Próxima cobrança
+- Expiração
+- Suspensão
+- Reativação
+
+Pode adicionar
+- Integração futura com Mercado Pago
+- Integração com PayPal
+
+Demonstra
+- Domínio rico
+- Agendamento
+- Background Services
