@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SubscriptionBilling.Api.Domain.Common;
 using SubscriptionBilling.Api.Domain.Subscriptions;
 using SubscriptionBilling.Api.Infrastructure.Payments;
 using SubscriptionBilling.Api.Infrastructure.Persistence;
@@ -30,6 +31,17 @@ public sealed class SubscriptionBillingBackgroundService(
 
         var now = DateTime.UtcNow;
 
+        var chargedCount = await ChargeDueSubscriptionsAsync(dbContext, now, cancellationToken);
+        var suspendedCount = await SuspendExpiredPastDueSubscriptionsAsync(dbContext, now, cancellationToken);
+
+        if (chargedCount > 0 || suspendedCount > 0)
+        {
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+    }
+
+    private async Task<int> ChargeDueSubscriptionsAsync(AppDbContext dbContext, DateTime now, CancellationToken cancellationToken)
+    {
         var dueSubscriptions = await dbContext.Subscriptions
             .Include(s => s.Plan)
             .Where(s => s.NextChargeAt <= now
@@ -54,9 +66,26 @@ public sealed class SubscriptionBillingBackgroundService(
             }
         }
 
-        if (dueSubscriptions.Count > 0)
+        return dueSubscriptions.Count;
+    }
+
+    private async Task<int> SuspendExpiredPastDueSubscriptionsAsync(AppDbContext dbContext, DateTime now, CancellationToken cancellationToken)
+    {
+        var pastDueSubscriptions = await dbContext.Subscriptions
+            .Include(s => s.Plan)
+            .Where(s => s.Status == SubscriptionStatus.PastDue)
+            .ToListAsync(cancellationToken);
+
+        var expiredSubscriptions = pastDueSubscriptions
+            .Where(s => s.Plan.BillingCycle.GetNextPeriodEnd(s.NextChargeAt) <= now)
+            .ToList();
+
+        foreach (var subscription in expiredSubscriptions)
         {
-            await dbContext.SaveChangesAsync(cancellationToken);
+            subscription.Suspend();
+            logger.LogWarning("Suspended subscription {SubscriptionId} after grace period expired.", subscription.Id);
         }
+
+        return expiredSubscriptions.Count;
     }
 }

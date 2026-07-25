@@ -86,6 +86,28 @@ public sealed class Subscription
         Status = SubscriptionStatus.PastDue;
     }
 
+    public void Suspend()
+    {
+        if (Status != SubscriptionStatus.PastDue)
+        {
+            throw new InvalidOperationException($"Cannot suspend a subscription in '{Status}' status.");
+        }
+
+        Status = SubscriptionStatus.Suspended;
+    }
+
+    public void Reactivate(DateTime now)
+    {
+        if (Status != SubscriptionStatus.Suspended)
+        {
+            throw new InvalidOperationException($"Cannot reactivate a subscription in '{Status}' status.");
+        }
+
+        Status = SubscriptionStatus.Active;
+        CurrentPeriodEnd = Plan.BillingCycle.GetNextPeriodEnd(now);
+        NextChargeAt = CurrentPeriodEnd;
+    }
+
     private void EnsureBillable()
     {
         if (Status is not (SubscriptionStatus.Trialing or SubscriptionStatus.Active))
