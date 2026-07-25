@@ -13,6 +13,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
+    public DbSet<ChargeAttempt> ChargeAttempts => Set<ChargeAttempt>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

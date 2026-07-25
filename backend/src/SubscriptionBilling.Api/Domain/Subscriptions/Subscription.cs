@@ -68,4 +68,29 @@ public sealed class Subscription
 
         return subscription;
     }
+
+    public void Renew()
+    {
+        EnsureBillable();
+
+        Status = SubscriptionStatus.Active;
+        TrialEndsAt = null;
+        CurrentPeriodEnd = Plan.BillingCycle.GetNextPeriodEnd(CurrentPeriodEnd);
+        NextChargeAt = CurrentPeriodEnd;
+    }
+
+    public void MarkPastDue()
+    {
+        EnsureBillable();
+
+        Status = SubscriptionStatus.PastDue;
+    }
+
+    private void EnsureBillable()
+    {
+        if (Status is not (SubscriptionStatus.Trialing or SubscriptionStatus.Active))
+        {
+            throw new InvalidOperationException($"Cannot process a charge for a subscription in '{Status}' status.");
+        }
+    }
 }

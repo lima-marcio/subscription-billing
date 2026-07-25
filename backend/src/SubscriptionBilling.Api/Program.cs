@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using SubscriptionBilling.Api.BackgroundServices;
 using SubscriptionBilling.Api.Extensions;
 using SubscriptionBilling.Api.Features.Plans;
 using SubscriptionBilling.Api.Features.Subscribers;
 using SubscriptionBilling.Api.Features.Subscriptions;
 using SubscriptionBilling.Api.Infrastructure.ExceptionHandling;
+using SubscriptionBilling.Api.Infrastructure.Payments;
 using SubscriptionBilling.Api.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,8 @@ builder.Services.AddPersistence(builder.Configuration, builder.Environment);
 builder.Services.AddPlansFeature();
 builder.Services.AddSubscribersFeature();
 builder.Services.AddSubscriptionsFeature();
+builder.Services.AddPaymentGateway();
+builder.Services.AddSubscriptionBillingBackgroundService();
 
 var app = builder.Build();
 
