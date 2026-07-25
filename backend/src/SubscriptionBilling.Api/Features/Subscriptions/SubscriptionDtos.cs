@@ -11,6 +11,7 @@ public sealed record SubscriptionResponse(
     DateTime StartedAt,
     DateTime? TrialEndsAt,
     DateTime CurrentPeriodEnd,
-    DateTime NextChargeAt);
+    DateTime NextChargeAt,
+    DateTime? CancelledAt);
 
 public sealed record CreateSubscriptionRequest(Guid SubscriberId, Guid PlanId);

@@ -26,6 +26,8 @@ public sealed class Subscription
 
     public DateTime NextChargeAt { get; private set; }
 
+    public DateTime? CancelledAt { get; private set; }
+
     private Subscription()
     {
     }
@@ -106,6 +108,31 @@ public sealed class Subscription
         Status = SubscriptionStatus.Active;
         CurrentPeriodEnd = Plan.BillingCycle.GetNextPeriodEnd(now);
         NextChargeAt = CurrentPeriodEnd;
+    }
+
+    public void Cancel(DateTime now)
+    {
+        if (Status is SubscriptionStatus.Cancelled or SubscriptionStatus.Expired)
+        {
+            throw new InvalidOperationException($"Cannot cancel a subscription in '{Status}' status.");
+        }
+
+        CancelledAt = now;
+
+        if (Status is SubscriptionStatus.PastDue or SubscriptionStatus.Suspended)
+        {
+            Status = SubscriptionStatus.Cancelled;
+        }
+    }
+
+    public void CompleteCancellation()
+    {
+        if (CancelledAt is null)
+        {
+            throw new InvalidOperationException("Subscription has not been cancelled.");
+        }
+
+        Status = SubscriptionStatus.Cancelled;
     }
 
     private void EnsureBillable()

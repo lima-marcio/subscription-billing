@@ -79,6 +79,24 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
         return ToResponse(subscription);
     }
 
+    public async Task<SubscriptionResponse?> CancelAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var subscription = await dbContext.Subscriptions
+            .Include(s => s.Subscriber)
+            .Include(s => s.Plan)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+        if (subscription is null)
+        {
+            return null;
+        }
+
+        subscription.Cancel(DateTime.UtcNow);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return ToResponse(subscription);
+    }
+
     private static SubscriptionResponse ToResponse(Subscription subscription) => new(
         subscription.Id,
         subscription.SubscriberId,
@@ -90,5 +108,6 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
         subscription.StartedAt,
         subscription.TrialEndsAt,
         subscription.CurrentPeriodEnd,
-        subscription.NextChargeAt);
+        subscription.NextChargeAt,
+        subscription.CancelledAt);
 }

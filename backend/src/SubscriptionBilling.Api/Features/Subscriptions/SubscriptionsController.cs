@@ -32,4 +32,11 @@ public sealed class SubscriptionsController(SubscriptionService subscriptionServ
         var subscription = await subscriptionService.ReactivateAsync(id, cancellationToken);
         return subscription is null ? NotFound() : Ok(subscription);
     }
+
+    [HttpPost("{id:guid}/cancel")]
+    public async Task<ActionResult<SubscriptionResponse>> Cancel(Guid id, CancellationToken cancellationToken)
+    {
+        var subscription = await subscriptionService.CancelAsync(id, cancellationToken);
+        return subscription is null ? NotFound() : Ok(subscription);
+    }
 }

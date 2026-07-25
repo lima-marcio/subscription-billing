@@ -50,6 +50,13 @@ public sealed class SubscriptionBillingBackgroundService(
 
         foreach (var subscription in dueSubscriptions)
         {
+            if (subscription.CancelledAt is not null)
+            {
+                subscription.CompleteCancellation();
+                logger.LogInformation("Subscription {SubscriptionId} cancelled at period end.", subscription.Id);
+                continue;
+            }
+
             var result = await paymentGateway.ChargeAsync(subscription.Id, subscription.Plan.Price, cancellationToken);
 
             if (result.Succeeded)
