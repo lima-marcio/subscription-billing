@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using SubscriptionBilling.Api.BackgroundServices;
 using SubscriptionBilling.Api.Extensions;
+using SubscriptionBilling.Api.Features.Auth;
 using SubscriptionBilling.Api.Features.Plans;
 using SubscriptionBilling.Api.Features.Subscribers;
 using SubscriptionBilling.Api.Features.Subscriptions;
@@ -25,6 +26,7 @@ builder.Services.AddSubscribersFeature();
 builder.Services.AddSubscriptionsFeature();
 builder.Services.AddPaymentGateway();
 builder.Services.AddSubscriptionBillingBackgroundService();
+builder.Services.AddAuthFeature();
 
 var app = builder.Build();
 

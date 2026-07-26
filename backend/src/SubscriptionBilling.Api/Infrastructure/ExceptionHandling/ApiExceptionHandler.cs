@@ -14,6 +14,7 @@ public sealed class ApiExceptionHandler(ILogger<ApiExceptionHandler> logger) : I
         {
             ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
             InvalidOperationException => (StatusCodes.Status409Conflict, exception.Message),
+            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
         };
 

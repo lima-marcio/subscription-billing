@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SubscriptionBilling.Api.Features.Subscribers;
 
 [ApiController]
 [Route("api/subscribers")]
+[Authorize]
 public sealed class SubscribersController(SubscriberService subscriberService) : ControllerBase
 {
     [HttpGet]
