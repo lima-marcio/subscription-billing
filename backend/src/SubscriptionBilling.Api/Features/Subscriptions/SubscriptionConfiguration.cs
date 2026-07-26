@@ -25,5 +25,10 @@ public sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subscri
             .WithMany()
             .HasForeignKey(s => s.PlanId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(s => s.PendingPlan)
+            .WithMany()
+            .HasForeignKey(s => s.PendingPlanId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

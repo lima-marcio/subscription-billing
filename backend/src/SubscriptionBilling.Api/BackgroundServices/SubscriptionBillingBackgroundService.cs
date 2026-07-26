@@ -44,6 +44,7 @@ public sealed class SubscriptionBillingBackgroundService(
     {
         var dueSubscriptions = await dbContext.Subscriptions
             .Include(s => s.Plan)
+            .Include(s => s.PendingPlan)
             .Where(s => s.NextChargeAt <= now
                 && (s.Status == SubscriptionStatus.Trialing || s.Status == SubscriptionStatus.Active))
             .ToListAsync(cancellationToken);
@@ -55,6 +56,12 @@ public sealed class SubscriptionBillingBackgroundService(
                 subscription.CompleteCancellation();
                 logger.LogInformation("Subscription {SubscriptionId} cancelled at period end.", subscription.Id);
                 continue;
+            }
+
+            if (subscription.PendingPlanId is not null)
+            {
+                subscription.ApplyPendingPlanChange();
+                logger.LogInformation("Applied pending plan change for subscription {SubscriptionId}.", subscription.Id);
             }
 
             var result = await paymentGateway.ChargeAsync(subscription.Id, subscription.Plan.Price, cancellationToken);

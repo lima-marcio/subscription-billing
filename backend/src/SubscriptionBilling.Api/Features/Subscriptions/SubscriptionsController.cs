@@ -39,4 +39,11 @@ public sealed class SubscriptionsController(SubscriptionService subscriptionServ
         var subscription = await subscriptionService.CancelAsync(id, cancellationToken);
         return subscription is null ? NotFound() : Ok(subscription);
     }
+
+    [HttpPost("{id:guid}/plan-change")]
+    public async Task<ActionResult<SubscriptionResponse>> SchedulePlanChange(Guid id, SchedulePlanChangeRequest request, CancellationToken cancellationToken)
+    {
+        var subscription = await subscriptionService.SchedulePlanChangeAsync(id, request, cancellationToken);
+        return subscription is null ? NotFound() : Ok(subscription);
+    }
 }

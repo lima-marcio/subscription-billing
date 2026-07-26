@@ -12,6 +12,10 @@ public sealed record SubscriptionResponse(
     DateTime? TrialEndsAt,
     DateTime CurrentPeriodEnd,
     DateTime NextChargeAt,
-    DateTime? CancelledAt);
+    DateTime? CancelledAt,
+    Guid? PendingPlanId,
+    string? PendingPlanName);
 
 public sealed record CreateSubscriptionRequest(Guid SubscriberId, Guid PlanId);
+
+public sealed record SchedulePlanChangeRequest(Guid NewPlanId);

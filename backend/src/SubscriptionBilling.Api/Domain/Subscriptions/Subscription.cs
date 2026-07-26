@@ -28,6 +28,10 @@ public sealed class Subscription
 
     public DateTime? CancelledAt { get; private set; }
 
+    public Guid? PendingPlanId { get; private set; }
+
+    public Plan? PendingPlan { get; private set; }
+
     private Subscription()
     {
     }
@@ -133,6 +137,38 @@ public sealed class Subscription
         }
 
         Status = SubscriptionStatus.Cancelled;
+    }
+
+    public void SchedulePlanChange(Plan newPlan)
+    {
+        ArgumentNullException.ThrowIfNull(newPlan);
+        EnsureBillable();
+
+        if (newPlan.IsArchived)
+        {
+            throw new ArgumentException("Cannot change to an archived plan.", nameof(newPlan));
+        }
+
+        if (newPlan.Id == PlanId)
+        {
+            throw new ArgumentException("The subscription is already on this plan.", nameof(newPlan));
+        }
+
+        PendingPlanId = newPlan.Id;
+        PendingPlan = newPlan;
+    }
+
+    public void ApplyPendingPlanChange()
+    {
+        if (PendingPlan is null)
+        {
+            return;
+        }
+
+        Plan = PendingPlan;
+        PlanId = PendingPlan.Id;
+        PendingPlanId = null;
+        PendingPlan = null;
     }
 
     private void EnsureBillable()

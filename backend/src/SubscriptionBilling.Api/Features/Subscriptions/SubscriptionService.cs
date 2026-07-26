@@ -9,9 +9,7 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
 {
     public async Task<IReadOnlyList<SubscriptionResponse>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var subscriptions = await dbContext.Subscriptions
-            .Include(s => s.Subscriber)
-            .Include(s => s.Plan)
+        var subscriptions = await IncludeRelated(dbContext.Subscriptions)
             .OrderByDescending(s => s.StartedAt)
             .ToListAsync(cancellationToken);
 
@@ -20,9 +18,7 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
 
     public async Task<SubscriptionResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var subscription = await dbContext.Subscriptions
-            .Include(s => s.Subscriber)
-            .Include(s => s.Plan)
+        var subscription = await IncludeRelated(dbContext.Subscriptions)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
         return subscription is null ? null : ToResponse(subscription);
@@ -46,9 +42,7 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
 
     public async Task<SubscriptionResponse?> ReactivateAsync(Guid id, CancellationToken cancellationToken)
     {
-        var subscription = await dbContext.Subscriptions
-            .Include(s => s.Subscriber)
-            .Include(s => s.Plan)
+        var subscription = await IncludeRelated(dbContext.Subscriptions)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
         if (subscription is null)
@@ -81,9 +75,7 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
 
     public async Task<SubscriptionResponse?> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
-        var subscription = await dbContext.Subscriptions
-            .Include(s => s.Subscriber)
-            .Include(s => s.Plan)
+        var subscription = await IncludeRelated(dbContext.Subscriptions)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
         if (subscription is null)
@@ -97,6 +89,30 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
         return ToResponse(subscription);
     }
 
+    public async Task<SubscriptionResponse?> SchedulePlanChangeAsync(Guid id, SchedulePlanChangeRequest request, CancellationToken cancellationToken)
+    {
+        var subscription = await IncludeRelated(dbContext.Subscriptions)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+        if (subscription is null)
+        {
+            return null;
+        }
+
+        var newPlan = await dbContext.Plans.FindAsync([request.NewPlanId], cancellationToken)
+            ?? throw new ArgumentException($"Plan '{request.NewPlanId}' was not found.", nameof(request));
+
+        subscription.SchedulePlanChange(newPlan);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return ToResponse(subscription);
+    }
+
+    private static IQueryable<Subscription> IncludeRelated(IQueryable<Subscription> query) => query
+        .Include(s => s.Subscriber)
+        .Include(s => s.Plan)
+        .Include(s => s.PendingPlan);
+
     private static SubscriptionResponse ToResponse(Subscription subscription) => new(
         subscription.Id,
         subscription.SubscriberId,
@@ -109,5 +125,7 @@ public sealed class SubscriptionService(AppDbContext dbContext, IPaymentGateway 
         subscription.TrialEndsAt,
         subscription.CurrentPeriodEnd,
         subscription.NextChargeAt,
-        subscription.CancelledAt);
+        subscription.CancelledAt,
+        subscription.PendingPlanId,
+        subscription.PendingPlan?.Name);
 }
