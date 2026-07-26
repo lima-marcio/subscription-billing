@@ -16,6 +16,7 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSwaggerWithJwt();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
@@ -42,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(CorsExtensions.AdminPanelPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
