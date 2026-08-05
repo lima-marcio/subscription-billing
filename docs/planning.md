@@ -79,7 +79,7 @@ Stack and conventions per `.ia/10-backend.md` and `.ia/30-conventions.md`.
 - **Scheduling**: `SubscriptionBillingBackgroundService : BackgroundService` running on a periodic timer; each tick loads subscriptions due for trial-expiry, renewal, suspension-grace-period-check, or pending-plan-change application, and invokes the corresponding domain methods.
 - **Auth**: JWT Bearer for the admin panel; Swagger UI configured with JWT support.
 - **Cross-cutting**: global exception middleware, Serilog structured logging, DI registration via extension methods (`AddPlansFeature()`, etc.), minimal `Program.cs`.
-- **Git**: repository initialized with a .NET `.gitignore` (per `.ia/10-backend.md`) — not yet done; ask for confirmation before creating the `backend/` folder, per `.ia/00-project.md`.
+- **Git**: repository initialized with a .NET `.gitignore` (per `.ia/10-backend.md`) — done.
 
 ## 6. Frontend Architecture
 
@@ -90,7 +90,7 @@ Stack and folder layout per `.ia/20-frontend.md` (admin panel only, per confirme
 - **Pages**: Login; Plans (list/create/edit/archive); Subscribers (list/create/edit); Subscriptions (list/detail with lifecycle actions: cancel, suspend, reactivate, schedule upgrade/downgrade).
 - **Data layer**: TanStack Query for server state, Axios client in `src/api`, Zod schemas shared with React Hook Form for validation.
 - **Auth**: JWT stored client-side, protected routes via React Router, Axios interceptor attaching the bearer token.
-- **Git**: repository initialized with a React `.gitignore` — ask for confirmation before creating the `frontend/` folder, per `.ia/00-project.md`.
+- **Git**: repository initialized with a React `.gitignore` — done.
 
 ## 7. Future / Optional
 
@@ -99,17 +99,17 @@ Stack and folder layout per `.ia/20-frontend.md` (admin panel only, per confirme
 
 ## 8. Roadmap (feature-by-feature, one completed before the next starts)
 
-1. Solution/project setup (backend + frontend scaffolding, git init) — requires confirmation before creating `backend/`/`frontend/` folders.
-2. Plans feature (domain entity + CRUD API).
-3. Subscribers feature (domain entity + CRUD API).
-4. Subscriptions feature: creation + trial handling.
-5. Billing background service: next-charge calculation, renewal, trial expiration.
-6. Suspension + reactivation.
-7. Cancellation.
-8. Upgrade/downgrade (applied at next renewal).
-9. JWT auth + Swagger security.
-10. Frontend admin panel wired to the API (all pages from §6).
-11. (Optional, future) Real gateway integration — Mercado Pago and/or PayPal.
+1. [x] Solution/project setup (backend + frontend scaffolding, git init) — requires confirmation before creating `backend/`/`frontend/` folders.
+2. [x] Plans feature (domain entity + CRUD API).
+3. [x] Subscribers feature (domain entity + CRUD API).
+4. [x] Subscriptions feature: creation + trial handling.
+5. [x] Billing background service: next-charge calculation, renewal, trial expiration.
+6. [x] Suspension + reactivation.
+7. [x] Cancellation.
+8. [x] Upgrade/downgrade (applied at next renewal).
+9. [x] JWT auth + Swagger security.
+10. [x] Frontend admin panel wired to the API (all pages from §6).
+11. [ ] (Optional, future) Real gateway integration — Mercado Pago and/or PayPal.
 
 ## 9. Non-Functional Notes
 
