@@ -1,6 +1,9 @@
+import { ArrowLeft } from '@phosphor-icons/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from '../components/Button';
+import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
 import { getPlans } from '../features/plans/api';
 import {
@@ -54,7 +57,7 @@ export function SubscriptionDetailPage() {
   });
 
   if (isLoading || !subscription) {
-    return <p className="text-sm text-gray-500 dark:text-gray-400">Loading...</p>;
+    return <p className="text-sm text-zinc-500 dark:text-zinc-400">Loading...</p>;
   }
 
   const canCancel = subscription.status !== 'Cancelled' && subscription.status !== 'Expired';
@@ -66,78 +69,76 @@ export function SubscriptionDetailPage() {
       <button
         type="button"
         onClick={() => navigate('/subscriptions')}
-        className="mb-4 text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+        className="mb-4 flex items-center gap-1.5 text-sm font-medium text-accent-700 transition-colors hover:text-accent-800 dark:text-accent-400 dark:hover:text-accent-300"
       >
-        ← Back to subscriptions
+        <ArrowLeft size={16} />
+        Back to subscriptions
       </button>
 
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-        <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <Card className="mb-6 p-6">
+        <div className="mb-5 flex items-center justify-between">
+          <h1 className="text-[22px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             {subscription.subscriberName}
           </h1>
           <StatusBadge status={subscription.status} />
         </div>
 
-        <dl className="grid grid-cols-2 gap-4 text-sm">
-          <Field label="Subscriber email" value={subscription.subscriberEmail} />
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <Field label="Subscriber email" value={subscription.subscriberEmail} mono />
           <Field label="Plan" value={subscription.planName} />
-          <Field label="Started" value={formatDate(subscription.startedAt)} />
-          <Field label="Trial ends" value={formatDate(subscription.trialEndsAt)} />
-          <Field label="Current period end" value={formatDate(subscription.currentPeriodEnd)} />
-          <Field label="Next charge" value={formatDate(subscription.nextChargeAt)} />
-          <Field label="Cancelled at" value={formatDate(subscription.cancelledAt)} />
+          <Field label="Started" value={formatDate(subscription.startedAt)} mono />
+          <Field label="Trial ends" value={formatDate(subscription.trialEndsAt)} mono />
+          <Field label="Current period end" value={formatDate(subscription.currentPeriodEnd)} mono />
+          <Field label="Next charge" value={formatDate(subscription.nextChargeAt)} mono />
+          <Field label="Cancelled at" value={formatDate(subscription.cancelledAt)} mono />
           <Field
             label="Pending plan change"
             value={subscription.pendingPlanName ? `-> ${subscription.pendingPlanName} (next renewal)` : '-'}
           />
         </dl>
-      </div>
+      </Card>
 
-      {actionError && <p className="mb-4 text-sm text-red-600">{actionError}</p>}
+      {actionError && <p className="mb-4 text-sm text-red-600 dark:text-red-400">{actionError}</p>}
 
       <div className="flex flex-wrap gap-3">
         {subscription.status === 'Suspended' && (
-          <button
-            type="button"
+          <Button
             onClick={() => {
               setActionError(null);
               reactivateMutation.mutate();
             }}
             disabled={reactivateMutation.isPending}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
           >
             Reactivate
-          </button>
+          </Button>
         )}
         {canCancel && (
-          <button
-            type="button"
+          <Button
+            variant="danger"
             onClick={() => {
               setActionError(null);
               cancelMutation.mutate();
             }}
             disabled={cancelMutation.isPending}
-            className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
           >
             Cancel subscription
-          </button>
+          </Button>
         )}
       </div>
 
       {canChangePlan && otherActivePlans.length > 0 && (
-        <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-          <h2 className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
+        <Card className="mt-6 p-6">
+          <h2 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Schedule upgrade / downgrade
           </h2>
-          <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
             Takes effect at the next renewal - the current plan keeps billing until then.
           </p>
           <div className="flex items-center gap-3">
             <select
               value={selectedPlanId}
               onChange={(e) => setSelectedPlanId(e.target.value)}
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition-colors focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
             >
               <option value="">Select a plan</option>
               {otherActivePlans.map((plan) => (
@@ -146,31 +147,27 @@ export function SubscriptionDetailPage() {
                 </option>
               ))}
             </select>
-            <button
-              type="button"
+            <Button
               disabled={!selectedPlanId || planChangeMutation.isPending}
               onClick={() => {
                 setActionError(null);
                 planChangeMutation.mutate();
               }}
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
             >
               Schedule change
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <dt className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-        {label}
-      </dt>
-      <dd className="text-gray-900 dark:text-gray-100">{value}</dd>
+      <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{label}</dt>
+      <dd className={`text-zinc-900 dark:text-zinc-100 ${mono ? 'font-mono tabular-nums' : ''}`}>{value}</dd>
     </div>
   );
 }

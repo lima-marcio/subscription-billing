@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { login as loginApi } from '../api/authApi';
+import { Button } from '../components/Button';
+import { Card } from '../components/Card';
 import { FormField } from '../components/FormField';
 import { useAuth } from '../hooks/useAuth';
 
@@ -36,28 +38,33 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900"
-      >
-        <h1 className="mb-6 text-xl font-semibold text-gray-900 dark:text-gray-100">
-          Admin sign in
-        </h1>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
+      <Card className="w-full max-w-sm p-8">
+        <div className="mb-6 flex items-center gap-2.5">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-accent-600 text-sm font-semibold text-white">
+            SB
+          </span>
+          <h1 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            Admin sign in
+          </h1>
+        </div>
 
-        <FormField label="Username" autoFocus {...register('username')} error={errors.username?.message} />
-        <FormField label="Password" type="password" {...register('password')} error={errors.password?.message} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormField label="Username" autoFocus {...register('username')} error={errors.username?.message} />
+          <FormField
+            label="Password"
+            type="password"
+            {...register('password')}
+            error={errors.password?.message}
+          />
 
-        {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
+          {error && <p className="mb-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-2 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
-        >
-          Sign in
-        </button>
-      </form>
+          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+            Sign in
+          </Button>
+        </form>
+      </Card>
     </div>
   );
 }

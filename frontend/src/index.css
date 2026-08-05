@@ -1,1 +1,29 @@
 @import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource/geist-mono";
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #0d9467;
+  --color-accent-700: #0b7a56;
+  --color-accent-800: #0a5f45;
+  --color-accent-900: #084c38;
+}
+
+@layer base {
+  body {
+    @apply bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+  }
+
+  ::selection {
+    @apply bg-accent-200 text-accent-900;
+  }
+}

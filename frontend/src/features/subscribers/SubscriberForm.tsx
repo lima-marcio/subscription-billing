@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Button } from '../../components/Button';
 import { FormField } from '../../components/FormField';
 import type { CreateSubscriberRequest, Subscriber } from '../../types';
 
@@ -38,25 +39,17 @@ export function SubscriberForm({ initialValue, onSubmit, onCancel, submitLabel }
   return (
     <form
       onSubmit={submit}
-      className="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900"
+      className="mb-6 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900"
     >
       <FormField label="Name" {...register('name')} error={errors.name?.message} />
       <FormField label="Email" type="email" {...register('email')} error={errors.email?.message} />
       <div className="mt-4 flex gap-3">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSubmitting}>
           {submitLabel}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
-        >
+        </Button>
+        <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );
