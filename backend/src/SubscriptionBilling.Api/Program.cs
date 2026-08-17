@@ -21,7 +21,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSwaggerWithJwt();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddProblemDetails();
-builder.Services.AddPersistence(builder.Configuration, builder.Environment);
+builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddPlansFeature();
 builder.Services.AddSubscribersFeature();
 builder.Services.AddSubscriptionsFeature();
