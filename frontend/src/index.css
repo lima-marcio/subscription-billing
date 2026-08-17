@@ -26,4 +26,8 @@
   ::selection {
     @apply bg-accent-200 text-accent-900;
   }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
 }
