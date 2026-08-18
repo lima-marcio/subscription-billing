@@ -502,3 +502,8 @@ pnpm-debug.log*
 *.dev.db
 *.dev.db-shm
 *.dev.db-wal
+
+########################################
+## Internal notes (not for the repo)
+########################################
+docs/tempo-total.md
