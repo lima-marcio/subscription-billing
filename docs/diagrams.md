@@ -1,35 +1,19 @@
 # Diagrams
 
 Reference diagrams for the Subscription Billing platform. Both render natively on
-GitHub (Mermaid) and are also embedded directly in the root [README](../README.md).
+GitHub and are also embedded directly in the root [README](../README.md).
 
 ## System architecture / request flow
 
 How a request travels from the admin panel to the database, and how the
 background billing job fits in.
 
-```mermaid
-flowchart LR
-    FE["React + Vite Admin Panel<br/>localhost:5173"]
+![System architecture diagram](diagrams/subscription-billing.svg)
 
-    subgraph API["Docker: api container (:8080)"]
-        AUTH["JWT Auth Middleware"]
-        CTRL["Controllers<br/>Auth / Plans / Subscribers / Subscriptions"]
-        SVC["Services (DI)<br/>business rules"]
-        BG["SubscriptionBillingBackgroundService<br/>periodic timer"]
-        GW["IPaymentGateway<br/>MockPaymentGateway"]
-    end
-
-    subgraph PG["Docker: postgres container (:5432)"]
-        DB[(PostgreSQL)]
-    end
-
-    FE -- "HTTPS + Bearer JWT" --> AUTH --> CTRL --> SVC
-    SVC -- "EF Core" --> DB
-    SVC --> GW
-    BG -- "EF Core" --> DB
-    BG --> GW
-```
+Built with [archify](diagrams/architecture.html) (source:
+[`diagrams/architecture.architecture.json`](diagrams/architecture.architecture.json)).
+Open `diagrams/architecture.html` in a browser for the interactive version
+(theme toggle, PNG/SVG export).
 
 - **Controllers** only translate HTTP ↔ DTOs and delegate to a `Service`; no
   business rules live there.

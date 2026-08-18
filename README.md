@@ -23,28 +23,7 @@ subscription state machine.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    FE["React + Vite Admin Panel<br/>localhost:5173"]
-
-    subgraph API["Docker: api container (:8080)"]
-        AUTH["JWT Auth Middleware"]
-        CTRL["Controllers<br/>Auth / Plans / Subscribers / Subscriptions"]
-        SVC["Services (DI)<br/>business rules"]
-        BG["SubscriptionBillingBackgroundService<br/>periodic timer"]
-        GW["IPaymentGateway<br/>MockPaymentGateway"]
-    end
-
-    subgraph PG["Docker: postgres container (:5432)"]
-        DB[(PostgreSQL)]
-    end
-
-    FE -- "HTTPS + Bearer JWT" --> AUTH --> CTRL --> SVC
-    SVC -- "EF Core" --> DB
-    SVC --> GW
-    BG -- "EF Core" --> DB
-    BG --> GW
-```
+![System architecture diagram](docs/diagrams/subscription-billing.svg)
 
 Controllers are thin and only translate HTTP ↔ DTOs; business rules live in a
 `Service` per feature (`Features/Plans`, `Features/Subscribers`,

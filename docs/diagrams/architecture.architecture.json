@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Subscription Billing",
+    "subtitle": "Request flow and background billing job",
+    "output": "architecture.html"
+  },
+  "components": [
+    { "id": "fe", "type": "frontend", "label": "Admin Panel", "sublabel": "React + Vite · :5173", "pos": [40, 100], "size": [130, 60] },
+    { "id": "auth", "type": "security", "label": "JWT Auth", "sublabel": "middleware", "pos": [280, 100], "size": [120, 60] },
+    { "id": "controllers", "type": "backend", "label": "Controllers", "sublabel": "thin, HTTP ↔ DTO", "pos": [280, 200], "size": [120, 60] },
+    { "id": "services", "type": "backend", "label": "Services", "sublabel": "business rules (DI)", "pos": [280, 300], "size": [120, 60] },
+    { "id": "background", "type": "backend", "label": "Billing Job", "sublabel": "periodic timer", "pos": [280, 400], "size": [120, 60] },
+    { "id": "gateway", "type": "external", "label": "Payment Gateway", "sublabel": "Mock (IPaymentGateway)", "pos": [280, 500], "size": [120, 60] },
+    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": ":5432", "pos": [560, 345], "size": [130, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Docker: api container (:8080)", "wraps": ["auth", "controllers", "services", "background", "gateway"] },
+    { "kind": "region", "label": "Docker: postgres container", "wraps": ["db"] }
+  ],
+  "connections": [
+    { "from": "fe", "to": "auth", "label": "HTTPS + Bearer JWT", "variant": "emphasis" },
+    { "from": "auth", "to": "controllers" },
+    { "from": "controllers", "to": "services" },
+    { "from": "services", "to": "db", "label": "EF Core", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "from": "background", "to": "db", "label": "EF Core", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "from": "services", "to": "gateway", "label": "charge", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "from": "background", "to": "gateway", "label": "charge", "fromSide": "top", "toSide": "bottom" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Request path", "items": ["JWT middleware guards every admin endpoint", "Controllers only translate HTTP ↔ DTO", "Business rules live in Services, injected via DI"] },
+    { "dot": "emerald", "title": "Billing job", "items": ["Runs on its own periodic timer inside the api container", "Renews due subscriptions, marks failed charges past-due", "Suspends past-due subscriptions after the grace period"] },
+    { "dot": "rose", "title": "Infrastructure", "items": ["API and PostgreSQL run as separate Docker containers", "docker-compose.yml orchestrates both for dev and prod"] }
+  ]
+}
