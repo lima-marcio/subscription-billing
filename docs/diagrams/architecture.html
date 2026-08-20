@@ -532,7 +532,7 @@
 
     <!-- Main Diagram -->
     <div class="diagram-container">
-      <svg viewBox="0 0 760 648" role="img" aria-label="Subscription Billing — Request flow and background billing job (architecture diagram)">
+      <svg viewBox="0 0 1150 358" role="img" aria-label="Subscription Billing — Request flow and background billing job (architecture diagram)">
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -556,83 +556,97 @@
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect x="250" y="70" width="180" height="510" rx="12" class="c-region" stroke-width="1"/>
-        <text x="258" y="88" class="t-cloud" font-size="9" font-weight="600">Docker: api container (:8080)</text>
+        <rect x="270" y="40" width="610" height="250" rx="12" class="c-region" stroke-width="1"/>
+        <text x="278" y="58" class="t-cloud" font-size="9" font-weight="600">Docker: api container (:8080)</text>
 
-        <rect x="530" y="315" width="190" height="110" rx="12" class="c-region" stroke-width="1"/>
-        <text x="538" y="333" class="t-cloud" font-size="9" font-weight="600">Docker: postgres container</text>
+        <rect x="920" y="40" width="190" height="110" rx="12" class="c-region" stroke-width="1"/>
+        <text x="928" y="58" class="t-cloud" font-size="9" font-weight="600">Docker: postgres container</text>
 
         <!-- Connection paths (before components for correct z-order) -->
-        <path d="M 170 130 L 280 130" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path d="M 340 160 L 340 200" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path d="M 340 260 L 340 300" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path d="M 400 330 L 472 330 Q 480 330 480 338 L 480 367 Q 480 375 488 375 L 560 375" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path d="M 400 430 L 472 430 Q 480 430 480 422 L 480 383 Q 480 375 488 375 L 560 375" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path d="M 340 360 L 340 500" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path d="M 340 400 L 340 560" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path d="M 170 100 L 300 100" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path d="M 420 100 L 510 100" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path d="M 640 100 L 720 100" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path d="M 850 100 L 950 100" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path d="M 575 210 L 575 178 Q 575 170 583 170 L 1007 170 Q 1015 170 1015 162 L 1015 130" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path d="M 785 130 L 785 210" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path d="M 640 240 L 720 240" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
         <!-- Components -->
-        <rect x="40" y="100" width="130" height="60" rx="6" class="c-mask"/>
-        <rect x="40" y="100" width="130" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
-        <text x="105" y="128" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Admin Panel</text>
-        <text x="105" y="144" class="t-muted" font-size="9" text-anchor="middle">React + Vite · :5173</text>
+        <g id="fe">
+        <rect x="40" y="70" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="40" y="70" width="130" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
+        <text x="105" y="98" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Admin Panel</text>
+        <text x="105" y="114" class="t-muted" font-size="9" text-anchor="middle">React + Vite · :5173</text>
+        </g>
 
-        <rect x="280" y="100" width="120" height="60" rx="6" class="c-mask"/>
-        <rect x="280" y="100" width="120" height="60" rx="6" class="c-security" stroke-width="1.5"/>
-        <text x="340" y="128" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">JWT Auth</text>
-        <text x="340" y="144" class="t-muted" font-size="9" text-anchor="middle">middleware</text>
+        <g id="auth">
+        <rect x="300" y="70" width="120" height="60" rx="6" class="c-mask"/>
+        <rect x="300" y="70" width="120" height="60" rx="6" class="c-security" stroke-width="1.5"/>
+        <text x="360" y="98" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">JWT Auth</text>
+        <text x="360" y="114" class="t-muted" font-size="9" text-anchor="middle">middleware</text>
+        </g>
 
-        <rect x="280" y="200" width="120" height="60" rx="6" class="c-mask"/>
-        <rect x="280" y="200" width="120" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
-        <text x="340" y="228" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Controllers</text>
-        <text x="340" y="244" class="t-muted" font-size="9" text-anchor="middle">thin, HTTP ↔ DTO</text>
+        <g id="controllers">
+        <rect x="510" y="70" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="510" y="70" width="130" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+        <text x="575" y="98" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Controllers</text>
+        <text x="575" y="114" class="t-muted" font-size="9" text-anchor="middle">thin, HTTP ↔ DTO</text>
+        </g>
 
-        <rect x="280" y="300" width="120" height="60" rx="6" class="c-mask"/>
-        <rect x="280" y="300" width="120" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
-        <text x="340" y="328" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Services</text>
-        <text x="340" y="344" class="t-muted" font-size="9" text-anchor="middle">business rules (DI)</text>
+        <g id="services">
+        <rect x="720" y="70" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="720" y="70" width="130" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+        <text x="785" y="98" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Services</text>
+        <text x="785" y="114" class="t-muted" font-size="9" text-anchor="middle">business rules (DI)</text>
+        </g>
 
-        <rect x="280" y="400" width="120" height="60" rx="6" class="c-mask"/>
-        <rect x="280" y="400" width="120" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
-        <text x="340" y="428" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Billing Job</text>
-        <text x="340" y="444" class="t-muted" font-size="9" text-anchor="middle">periodic timer</text>
+        <g id="db">
+        <rect x="950" y="70" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="950" y="70" width="130" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+        <text x="1015" y="98" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">PostgreSQL</text>
+        <text x="1015" y="114" class="t-muted" font-size="9" text-anchor="middle">:5432</text>
+        </g>
 
-        <rect x="280" y="500" width="120" height="60" rx="6" class="c-mask"/>
-        <rect x="280" y="500" width="120" height="60" rx="6" class="c-external" stroke-width="1.5"/>
-        <text x="340" y="528" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Payment Gateway</text>
-        <text x="340" y="544" class="t-muted" font-size="9" text-anchor="middle">Mock (IPaymentGateway)</text>
+        <g id="background">
+        <rect x="510" y="210" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="510" y="210" width="130" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+        <text x="575" y="238" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Billing Job</text>
+        <text x="575" y="254" class="t-muted" font-size="9" text-anchor="middle">periodic timer</text>
+        </g>
 
-        <rect x="560" y="345" width="130" height="60" rx="6" class="c-mask"/>
-        <rect x="560" y="345" width="130" height="60" rx="6" class="c-database" stroke-width="1.5"/>
-        <text x="625" y="373" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">PostgreSQL</text>
-        <text x="625" y="389" class="t-muted" font-size="9" text-anchor="middle">:5432</text>
+        <g id="gateway">
+        <rect x="720" y="210" width="130" height="60" rx="6" class="c-mask"/>
+        <rect x="720" y="210" width="130" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+        <text x="785" y="238" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Payment Gateway</text>
+        <text x="785" y="254" class="t-muted" font-size="9" text-anchor="middle">Mock (IPaymentGateway)</text>
+        </g>
 
         <!-- Connection labels -->
-        <rect x="176.8" y="110" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
-        <text x="225" y="120" class="t-backend" font-size="8" text-anchor="middle">HTTPS + Bearer JWT</text>
+        <rect x="186.8" y="80" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
+        <text x="235" y="90" class="t-backend" font-size="8" text-anchor="middle">HTTPS + Bearer JWT</text>
 
 
-        <rect x="458.2" y="332.5" width="43.6" height="14" rx="3" class="c-mask"/>
-        <text x="480" y="342.5" class="t-backend" font-size="8" text-anchor="middle">EF Core</text>
-        <rect x="458.2" y="382.5" width="43.6" height="14" rx="3" class="c-mask"/>
-        <text x="480" y="392.5" class="t-backend" font-size="8" text-anchor="middle">EF Core</text>
-        <rect x="320.6" y="364" width="38.8" height="14" rx="3" class="c-mask"/>
-        <text x="340" y="374" class="t-muted" font-size="8" text-anchor="middle">charge</text>
-        <rect x="320.6" y="380" width="38.8" height="14" rx="3" class="c-mask"/>
-        <text x="340" y="390" class="t-muted" font-size="8" text-anchor="middle">charge</text>
+        <rect x="878.2" y="80" width="43.6" height="14" rx="3" class="c-mask"/>
+        <text x="900" y="90" class="t-backend" font-size="8" text-anchor="middle">EF Core</text>
+        <rect x="773.2" y="150" width="43.6" height="14" rx="3" class="c-mask"/>
+        <text x="795" y="160" class="t-backend" font-size="8" text-anchor="middle">EF Core</text>
+        <rect x="765.6" y="134" width="38.8" height="14" rx="3" class="c-mask"/>
+        <text x="785" y="144" class="t-muted" font-size="8" text-anchor="middle">charge</text>
+        <rect x="660.6" y="220" width="38.8" height="14" rx="3" class="c-mask"/>
+        <text x="680" y="230" class="t-muted" font-size="8" text-anchor="middle">charge</text>
 
         <!-- Legend -->
-        <text x="40" y="619" class="t-primary" font-size="9" font-weight="600">Legend</text>
-        <rect x="40" y="624" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
-        <text x="60" y="632" class="t-muted" font-size="8">Frontend</text>
-        <rect x="138" y="624" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
-        <text x="158" y="632" class="t-muted" font-size="8">Security</text>
-        <rect x="236" y="624" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-        <text x="256" y="632" class="t-muted" font-size="8">Backend</text>
-        <rect x="329" y="624" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-        <text x="349" y="632" class="t-muted" font-size="8">External</text>
-        <rect x="427" y="624" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-        <text x="447" y="632" class="t-muted" font-size="8">Database</text>
+        <text x="40" y="329" class="t-primary" font-size="9" font-weight="600">Legend</text>
+        <rect x="40" y="334" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+        <text x="60" y="342" class="t-muted" font-size="8">Frontend</text>
+        <rect x="138" y="334" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+        <text x="158" y="342" class="t-muted" font-size="8">Security</text>
+        <rect x="236" y="334" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+        <text x="256" y="342" class="t-muted" font-size="8">Backend</text>
+        <rect x="329" y="334" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+        <text x="349" y="342" class="t-muted" font-size="8">Database</text>
+        <rect x="427" y="334" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+        <text x="447" y="342" class="t-muted" font-size="8">External</text>
       </svg>
     </div>
 

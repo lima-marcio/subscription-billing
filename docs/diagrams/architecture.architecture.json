@@ -7,13 +7,13 @@
     "output": "architecture.html"
   },
   "components": [
-    { "id": "fe", "type": "frontend", "label": "Admin Panel", "sublabel": "React + Vite · :5173", "pos": [40, 100], "size": [130, 60] },
-    { "id": "auth", "type": "security", "label": "JWT Auth", "sublabel": "middleware", "pos": [280, 100], "size": [120, 60] },
-    { "id": "controllers", "type": "backend", "label": "Controllers", "sublabel": "thin, HTTP ↔ DTO", "pos": [280, 200], "size": [120, 60] },
-    { "id": "services", "type": "backend", "label": "Services", "sublabel": "business rules (DI)", "pos": [280, 300], "size": [120, 60] },
-    { "id": "background", "type": "backend", "label": "Billing Job", "sublabel": "periodic timer", "pos": [280, 400], "size": [120, 60] },
-    { "id": "gateway", "type": "external", "label": "Payment Gateway", "sublabel": "Mock (IPaymentGateway)", "pos": [280, 500], "size": [120, 60] },
-    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": ":5432", "pos": [560, 345], "size": [130, 60] }
+    { "id": "fe", "type": "frontend", "label": "Admin Panel", "sublabel": "React + Vite · :5173", "pos": [40, 70], "size": [130, 60] },
+    { "id": "auth", "type": "security", "label": "JWT Auth", "sublabel": "middleware", "pos": [300, 70], "size": [120, 60] },
+    { "id": "controllers", "type": "backend", "label": "Controllers", "sublabel": "thin, HTTP ↔ DTO", "pos": [510, 70], "size": [130, 60] },
+    { "id": "services", "type": "backend", "label": "Services", "sublabel": "business rules (DI)", "pos": [720, 70], "size": [130, 60] },
+    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": ":5432", "pos": [950, 70], "size": [130, 60] },
+    { "id": "background", "type": "backend", "label": "Billing Job", "sublabel": "periodic timer", "pos": [510, 210], "size": [130, 60] },
+    { "id": "gateway", "type": "external", "label": "Payment Gateway", "sublabel": "Mock (IPaymentGateway)", "pos": [720, 210], "size": [130, 60] }
   ],
   "boundaries": [
     { "kind": "region", "label": "Docker: api container (:8080)", "wraps": ["auth", "controllers", "services", "background", "gateway"] },
@@ -24,9 +24,9 @@
     { "from": "auth", "to": "controllers" },
     { "from": "controllers", "to": "services" },
     { "from": "services", "to": "db", "label": "EF Core", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
-    { "from": "background", "to": "db", "label": "EF Core", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "from": "background", "to": "db", "label": "EF Core", "variant": "emphasis", "fromSide": "top", "toSide": "bottom", "via": [[575, 170], [1015, 170]] },
     { "from": "services", "to": "gateway", "label": "charge", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
-    { "from": "background", "to": "gateway", "label": "charge", "fromSide": "top", "toSide": "bottom" }
+    { "from": "background", "to": "gateway", "label": "charge", "fromSide": "right", "toSide": "left" }
   ],
   "cards": [
     { "dot": "cyan", "title": "Request path", "items": ["JWT middleware guards every admin endpoint", "Controllers only translate HTTP ↔ DTO", "Business rules live in Services, injected via DI"] },
